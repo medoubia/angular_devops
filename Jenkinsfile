@@ -1,4 +1,4 @@
-pipeline {
+ pipeline {
     agent any
 
     environment {
@@ -10,7 +10,7 @@ pipeline {
     }
 
     stages {
-        stage("Build Docker Image") {
+        stage("Build Docker Imag") {
             steps {
                 script {
                     sh 'docker build -t your-angular-app1 .'
@@ -18,32 +18,31 @@ pipeline {
             }
         }
 
-        
-      stage("Test Security with SonarQube") {
-            steps {
-                script {
-                    withSonarQubeEnv('SonarQube') {  // 'SonarQube' is the name of the SonarQube instance configured in Jenkins
-                        sh '''
-                            # Ensure PATH includes SonarScanner
-                            export PATH=/opt/sonar-scanner/bin:$PATH
-                            echo "Current PATH: $PATH"
-                            which sonar-scanner
+       stage("Test Security with SonarQube") {
+    steps {
+        script {
+            // Running SonarQube analysis within the SonarQube environment
+            withSonarQubeEnv('SonarQube') {  // 'SonarQube' is the name of the SonarQube instance in Jenkins
+                sh '''
+                    # Ensure PATH includes SonarScanner
+                    export PATH=/opt/sonar-scanner/bin:$PATH
+                    echo "Current PATH: $PATH"
+                    which sonar-scanner
 
-                            # Run SonarScanner
-                            sonar-scanner \
-                              -Dsonar.projectKey=Angular \
-                              -Dsonar.sources=. \
-                              -Dsonar.host.url=$SONAR_HOST_URL \
-                              -Dsonar.login=$SONAR_TOKEN
-                        '''
-                    }
-                }
+                    # Run SonarScanner
+                    sonar-scanner \
+                      -Dsonar.projectKey=Angular \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.login=$SONAR_TOKEN
+                '''
             }
         }
-
-        stage('Quality Gate') {
+    }
+}
+      stage('Quality Gate') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {  // Increased timeout for Quality Gate
+                timeout(time: 5, unit: 'MINUTES') {  // Set a timeout of 5 minutes
                     script {
                         def qualityGate = waitForQualityGate(abortPipeline: true)  // Wait for the quality gate result and abort if it fails
                         if (qualityGate.status != 'OK') {
@@ -53,6 +52,9 @@ pipeline {
                 }
             }
         }
+
+
+       
 
         stage("Deploy Docker Container") {
             steps {
