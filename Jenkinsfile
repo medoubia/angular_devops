@@ -5,6 +5,8 @@ pipeline {
         // SonarQube server URL and token
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_TOKEN = 'sqp_b1c84db3309bede3505a8c2409989ba8df7faf4d'
+        // Adding the SonarScanner path
+        PATH = "/opt/sonar-scanner/bin:$PATH"
     }
 
     stages {
@@ -21,11 +23,17 @@ pipeline {
                 script {
                     // Running SonarQube analysis
                     sh '''
+                        # Ensure PATH includes SonarScanner
+                        export PATH=/opt/sonar-scanner/bin:$PATH
+                        echo "Current PATH: $PATH"
+                        which sonar-scanner
+
+                        # Run SonarScanner
                         sonar-scanner \
-  -Dsonar.projectKey=Angular \
-  -Dsonar.sources=. \
-  -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.token=sqp_37f681dfe76d12bb67692462b895e9bb91a13387
+                          -Dsonar.projectKey=Angular \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=$SONAR_HOST_URL \
+                          -Dsonar.token=$SONAR_TOKEN
                     '''
                 }
             }
