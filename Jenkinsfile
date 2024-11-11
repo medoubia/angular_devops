@@ -22,10 +22,10 @@ pipeline {
                     // Running SonarQube analysis
                     sh '''
                         sonar-scanner \
-                        -Dsonar.projectKey=Angular \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=${SONAR_HOST_URL} \
-                        -Dsonar.token=${SONAR_TOKEN}
+  -Dsonar.projectKey=Angular \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.token=sqp_37f681dfe76d12bb67692462b895e9bb91a13387
                     '''
                 }
             }
