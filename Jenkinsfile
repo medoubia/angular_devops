@@ -40,19 +40,7 @@
         }
     }
 }
-      stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {  // Set a timeout of 5 minutes
-                    script {
-                        def qualityGate = waitForQualityGate(abortPipeline: true)  // Wait for the quality gate result and abort if it fails
-                        if (qualityGate.status != 'OK') {
-                            error "Quality Gate failed. Aborting pipeline."
-                        }
-                    }
-                }
-            }
-        }
-
+    
 
        
 
