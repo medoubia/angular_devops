@@ -18,26 +18,28 @@ pipeline {
             }
         }
 
-        stage("Test Security with SonarQube") {
-            steps {
-                script {
-                    // Running SonarQube analysis
-                    sh '''
-                        # Ensure PATH includes SonarScanner
-                        export PATH=/opt/sonar-scanner/bin:$PATH
-                        echo "Current PATH: $PATH"
-                        which sonar-scanner
+       stage("Test Security with SonarQube") {
+    steps {
+        script {
+            // Running SonarQube analysis within the SonarQube environment
+            withSonarQubeEnv('SonarQube') {  // 'SonarQube' is the name of the SonarQube instance in Jenkins
+                sh '''
+                    # Ensure PATH includes SonarScanner
+                    export PATH=/opt/sonar-scanner/bin:$PATH
+                    echo "Current PATH: $PATH"
+                    which sonar-scanner
 
-                        # Run SonarScanner
-                        sonar-scanner \
-                          -Dsonar.projectKey=Angular \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=$SONAR_HOST_URL \
-                          -Dsonar.token=$SONAR_TOKEN
-                    '''
-                }
+                    # Run SonarScanner
+                    sonar-scanner \
+                      -Dsonar.projectKey=Angular \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.token=$SONAR_TOKEN
+                '''
             }
         }
+    }
+}
 
         stage('Quality Gate') {
             steps {
