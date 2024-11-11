@@ -34,7 +34,7 @@ pipeline {
                       -Dsonar.projectKey=Angular \
                       -Dsonar.sources=. \
                       -Dsonar.host.url=$SONAR_HOST_URL \
-                      -Dsonar.token=$SONAR_TOKEN
+                      -Dsonar.login=$SONAR_TOKEN
                 '''
             }
         }
