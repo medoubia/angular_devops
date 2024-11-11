@@ -10,7 +10,7 @@ pipeline {
     }
 
     stages {
-        stage("Build Docker Image") {
+        stage("Build Docker Imag") {
             steps {
                 script {
                     sh 'docker build -t your-angular-app1 .'
