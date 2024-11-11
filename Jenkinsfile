@@ -18,23 +18,38 @@ pipeline {
             }
         }
 
-        stage("Test Security with SonarQube") {
+        
+      stage("Test Security with SonarQube") {
             steps {
                 script {
-                    // Running SonarQube analysis
-                    sh '''
-                        # Ensure PATH includes SonarScanner
-                        export PATH=/opt/sonar-scanner/bin:$PATH
-                        echo "Current PATH: $PATH"
-                        which sonar-scanner
+                    withSonarQubeEnv('SonarQube') {  // 'SonarQube' is the name of the SonarQube instance configured in Jenkins
+                        sh '''
+                            # Ensure PATH includes SonarScanner
+                            export PATH=/opt/sonar-scanner/bin:$PATH
+                            echo "Current PATH: $PATH"
+                            which sonar-scanner
 
-                        # Run SonarScanner
-                        sonar-scanner \
-                          -Dsonar.projectKey=Angular \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=$SONAR_HOST_URL \
-                          -Dsonar.token=$SONAR_TOKEN
-                    '''
+                            # Run SonarScanner
+                            sonar-scanner \
+                              -Dsonar.projectKey=Angular \
+                              -Dsonar.sources=. \
+                              -Dsonar.host.url=$SONAR_HOST_URL \
+                              -Dsonar.login=$SONAR_TOKEN
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {  // Increased timeout for Quality Gate
+                    script {
+                        def qualityGate = waitForQualityGate(abortPipeline: true)  // Wait for the quality gate result and abort if it fails
+                        if (qualityGate.status != 'OK') {
+                            error "Quality Gate failed. Aborting pipeline."
+                        }
+                    }
                 }
             }
         }
