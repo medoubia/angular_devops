@@ -44,7 +44,7 @@ pipeline {
                 script {
                     sh 'docker stop your-angular-app1-container || true'
                     sh 'docker rm your-angular-app1-container || true'
-                    sh 'docker run -d -p 8080:80 --name your-angular-app1-container your-angular-app1'
+                    sh 'docker run -d -p 8087:80 --name your-angular-app1-container your-angular-app1'
                 }
             }
         }
