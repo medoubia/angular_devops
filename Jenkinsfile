@@ -18,6 +18,8 @@
             }
         }
 
+    
+
         stage('SonarQube Analysis') {
             steps {
                 script {
@@ -25,10 +27,10 @@
                     withSonarQubeEnv('SonarQube') {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=GitlabMx \
+                            -Dsonar.projectKey=Angular \
                             -Dsonar.host.url=http://localhost:9000 \
                             -Dsonar.login=sqa_1ad621b299a30105a78f2dc542563732afce874c \
-                            -Dsonar.sources=./app \
+                            -Dsonar.sources=. \
                             -Dsonar.exclusions="vendor/*,storage/**,bootstrap/cache/*"
                         """
                     }
