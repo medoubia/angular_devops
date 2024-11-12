@@ -4,7 +4,7 @@
     environment {
         // SonarQube server URL and token
         SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_TOKEN = 'sqp_b1c84db3309bede3505a8c2409989ba8df7faf4d'
+        SONAR_TOKEN = 'sqa_1ad621b299a30105a78f2dc542563732afce874c'
         // Adding the SonarScanner path
         PATH = "/opt/sonar-scanner/bin:$PATH"
     }
